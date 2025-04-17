@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Accueil - Mon Projet Solidaire</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap + Google Fonts + FontAwesome + AOS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+    <style>
+
+        .text-pink {
+            color: #FF6699 !important;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('/images/image.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #2e2e2e;
+        }
+
+
+        .navbar {
+            background-color: #fff;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: #333 !important;
+        }
+
+        .btn-pink {
+            background-color: #FF6699;
+            color: white;
+            border: none;
+        }
+
+        .btn-pink:hover {
+            background-color: #e85588;
+        }
+
+        .hero-section {
+            padding: 80px 0;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: 900;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            margin: 20px 0;
+        }
+
+        .illustration {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .icon-circle {
+            background-color: #FF6699;
+            color: white;
+            border-radius: 50%;
+            padding: 20px;
+            display: inline-block;
+            font-size: 2rem;
+        }
+
+        footer {
+            background-color: #ffc6d4;
+            color: white;
+        }
+
+        footer input,
+        footer textarea {
+            background-color: white;
+            color: #333;
+        }
+
+        footer .form-control::placeholder {
+            color: #999;
+        }
+
+        footer h5 {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/">Projet Solidaire</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/organisation}">Organisation</a></li>
+                <li class="nav-item"><a class="nav-link" href="/actions">Actions de Charité</a></li>
+                <li class="nav-item"><a class="nav-link" href="/dons">Don</a></li>
+                <li class="nav-item"><a class="nav-link" href="/participations">Participation</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero-section text-center text-md-start">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1>Actions de Charité en vedette</h1>
+                <p>Bienvenue sur Mon Projet Solidaire, une plateforme dédiée à la promotion de l'entraide et de la solidarité. Notre mission est de rassembler des individus et des organisations autour de causes humanitaires.</p>
+                <a href="#" class="btn btn-pink btn-lg px-4">Participation</a>
+                <a href="#" class="btn btn-link text-decoration-underline text-dark fw-semibold">voir plus</a>
+            </div>
+            <div class="col-md-6 text-center">
+                <img src="/images/image.png" alt="Illustration" class="illustration">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Notre Mission -->
+<section class="py-5 bg-light" data-aos="fade-up">
+    <div class="container">
+        <h2 class="section-title">Notre Mission</h2>
+        <p class="text-center fs-5 px-md-5">
+            Nous croyons en la force de la solidarité. Notre mission est de connecter les individus désireux d’aider avec les organisations qui ont un réel impact sur le terrain. En participant à des actions concrètes, vous contribuez à bâtir un avenir plus équitable et humain.
+        </p>
+    </div>
+</section>
+
+<!-- Comment ça marche -->
+<section class="py-5" data-aos="fade-up">
+    <div class="container">
+        <h2 class="section-title">Comment ça marche ?</h2>
+        <div class="row text-center">
+            <div class="col-md-4" data-aos="zoom-in" data-aos-delay="100">
+                <div class="mb-3">
+                    <span class="icon-circle"><i class="fas fa-search"></i></span>
+                </div>
+                <h5 class="fw-bold">1. Explorez</h5>
+                <p>Trouvez une cause ou une action de charité qui vous tient à cœur.</p>
+            </div>
+            <div class="col-md-4" data-aos="zoom-in" data-aos-delay="200">
+                <div class="mb-3">
+                    <span class="icon-circle"><i class="fas fa-hand-holding-heart"></i></span>
+                </div>
+                <h5 class="fw-bold">2. Participez</h5>
+                <p>Inscrivez-vous et engagez-vous dans une action concrète ou un don.</p>
+            </div>
+            <div class="col-md-4" data-aos="zoom-in" data-aos-delay="300">
+                <div class="mb-3">
+                    <span class="icon-circle"><i class="fas fa-check-circle"></i></span>
+                </div>
+                <h5 class="fw-bold">3. Contribuez</h5>
+                <p>Votre action aide à améliorer la vie des personnes dans le besoin.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<!-- Footer -->
+<footer class="py-4 mt-5" style="background-color: #ffc6d4; color: white;">
+    <div class="container">
+        <div class="row align-items-start gy-4">
+            <!-- Formulaire de contact -->
+            <div class="col-md-6">
+                <h5 class="fw-bold mb-2">Contactez-nous</h5>
+                <form>
+                    <div class="mb-2">
+                        <input type="text" class="form-control form-control-sm" placeholder="Votre nom" required>
+                    </div>
+                    <div class="mb-2">
+                        <input type="email" class="form-control form-control-sm" placeholder="Votre email" required>
+                    </div>
+                    <div class="mb-2">
+                        <textarea class="form-control form-control-sm" rows="3" placeholder="Votre message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-sm btn-light fw-semibold">Envoyer</button>
+                </form>
+            </div>
+
+            <!-- Réseaux sociaux -->
+            <div class="col-md-6 text-md-end">
+                <h5 class="fw-bold mb-2">Suivez-nous</h5>
+                <p class="mb-1">Rejoignez-nous sur les réseaux :</p>
+                <div>
+                    <a href="#" class="text-white me-3 fs-5"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="text-white me-3 fs-5"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="text-white me-3 fs-5"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-white fs-5"><i class="fab fa-x-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-3 border-white">
+
+        <div class="text-center small">
+            &copy; 2025 Mon Projet Solidaire. Tous droits réservés.
+        </div>
+    </div>
+</footer>
+
+
+<!-- JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script>
+    AOS.init();
+</script>
+</body>
+</html>

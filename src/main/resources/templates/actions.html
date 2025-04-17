@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actions de Charité - CharityApp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+<div class="container mx-auto px-4 py-6">
+    <h1 class="text-3xl font-bold mb-6 text-center">Nos Actions de Charité</h1>
+
+    <!-- Lien vers la page d'accueil -->
+    <div class="mb-4">
+        <a th:href="@{/}" class="text-blue-600 hover:underline">Retour à la page d'accueil</a>
+    </div>
+
+    <!-- Filtre par catégorie -->
+    <div class="mb-4">
+        <form method="get" action="/actions">
+            <label for="categorie" class="mr-2">Filtrer par catégorie :</label>
+            <select name="categorie" id="categorie" class="border p-2 rounded">
+                <option value="">Toutes les catégories</option>
+                <option value="EDUCATION">Éducation</option>
+                <option value="SANTE">Santé</option>
+                <option value="ENVIRONNEMENT">Environnement</option>
+                <option value="AUTRE">Autre</option>
+            </select>
+            <button type="submit" class="bg-blue-600 text-white p-2 rounded ml-2">Filtrer</button>
+        </form>
+    </div>
+
+    <!-- Affichage des actions de charité -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div th:each="action : ${actions}" class="bg-white p-4 rounded-2xl shadow hover:shadow-lg transition">
+            <!-- Affichage de l'image de l'action, seulement si la collection 'media' n'est pas vide -->
+            <div th:if="${not #lists.isEmpty(action.media)}">
+                <img th:src="@{'/images/' + ${action.media[0]}}" alt="Image de l'action" class="w-full h-56 object-cover rounded-lg">
+            </div>
+            <!-- Message de secours si la collection 'media' est vide -->
+            <div th:if="${#lists.isEmpty(action.media)}">
+                <p class="text-sm text-gray-600">Aucune image disponible pour cette action.</p>
+            </div>
+
+            <h2 class="text-xl font-semibold mb-2" th:text="${action.titre}">Titre de l'action</h2>
+            <p class="text-sm text-blue-700 mb-2 font-medium" th:if="${action.organisation != null}" th:text="'Organisé par : ' + ${action.organisation.nom}">Nom de l'organisation</p>
+
+            <p class="text-sm text-gray-600 mb-2" th:text="${action.lieu}">Lieu</p>
+            <p class="text-sm mb-2" th:text="${#strings.abbreviate(action.description, 100)}">Description...</p>
+            <div class="flex justify-between items-center">
+                <span class="text-green-600 font-bold" th:text="${action.objectifCollecte} + ' € Objectif'">Objectif</span>
+                <a th:href="@{'/actions/' + ${action.id}}" class="text-blue-600 hover:underline text-sm">Voir plus</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
