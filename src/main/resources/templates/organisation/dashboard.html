@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tableau de Bord - CharityApp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+<div class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <a th:href="@{/}" class="text-xl font-bold text-gray-800 hover:text-indigo-600 transition-colors duration-200">
+                            CharityApp
+                        </a>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="#" class="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Tableau de bord
+                        </a>
+                        <a th:href="@{/organisation/dashboard/actions}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Actions
+                        </a>
+                        <a th:href="@{/organisation/dashboard/dons}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Dons
+                        </a>
+                        <a th:href="@{/organisation/dashboard/profile}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Profil
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main content -->
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <!-- Organisation info -->
+        <div class="bg-white shadow rounded-lg p-6 mb-6">
+            <div class="flex items-center">
+                <img th:if="${organisation.logo}" th:src="@{'/images/' + ${organisation.logo}}" alt="Logo" class="h-16 w-16 rounded-full">
+                <div class="ml-4">
+                    <h2 class="text-2xl font-bold text-gray-900" th:text="${organisation.nom}"></h2>
+                    <p class="text-gray-600" th:text="${organisation.description}"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <!-- Total Actions -->
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-hands-helping text-3xl text-indigo-600"></i>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">Total Actions</dt>
+                                <dd class="text-lg font-medium text-gray-900" th:text="${stats.totalActions}"></dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Actions -->
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-check-circle text-3xl text-green-600"></i>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">Actions Actives</dt>
+                                <dd class="text-lg font-medium text-gray-900" th:text="${stats.activeActions}"></dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Dons -->
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-hand-holding-usd text-3xl text-yellow-600"></i>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">Total Dons</dt>
+                                <dd class="text-lg font-medium text-gray-900" th:text="${#numbers.formatCurrency(stats.totalDons)}"></dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Average Donation -->
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-chart-line text-3xl text-blue-600"></i>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">Don Moyen</dt>
+                                <dd class="text-lg font-medium text-gray-900" th:text="${#numbers.formatCurrency(stats.averageDonation)}"></dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Actions -->
+        <div class="mt-8">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Actions Récentes</h3>
+            <div class="bg-white shadow overflow-hidden sm:rounded-md">
+                <ul class="divide-y divide-gray-200">
+                    <li th:each="action : ${recentActions}">
+                        <div class="px-4 py-4 sm:px-6">
+                            <div class="flex items-center justify-between">
+                                <p class="text-sm font-medium text-indigo-600 truncate" th:text="${action.titre}"></p>
+                                <div class="ml-2 flex-shrink-0 flex">
+                                    <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                                       th:classappend="${action.archived ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}"
+                                       th:text="${action.archived ? 'Archivée' : 'Active'}">
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="mt-2 sm:flex sm:justify-between">
+                                <div class="sm:flex">
+                                    <p class="flex items-center text-sm text-gray-500">
+                                        <i class="fas fa-map-marker-alt flex-shrink-0 mr-1.5 text-gray-400"></i>
+                                        <span th:text="${action.lieu}"></span>
+                                    </p>
+                                </div>
+                                <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                                    <i class="fas fa-calendar flex-shrink-0 mr-1.5 text-gray-400"></i>
+                                    <span th:text="${#temporals.format(action.dateDebut, 'dd/MM/yyyy')}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Recent Donations -->
+        <div class="mt-8">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Dons Récents</h3>
+            <div class="bg-white shadow overflow-hidden sm:rounded-md">
+                <ul class="divide-y divide-gray-200">
+                    <li th:each="don : ${recentDons}">
+                        <div class="px-4 py-4 sm:px-6">
+                            <div class="flex items-center justify-between">
+                                <p class="text-sm font-medium text-indigo-600 truncate" th:text="${don.actionCharite.titre}"></p>
+                                <div class="ml-2 flex-shrink-0 flex">
+                                    <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                                       th:text="${#numbers.formatCurrency(don.montant)}">
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="mt-2 sm:flex sm:justify-between">
+                                <div class="sm:flex">
+                                    <p class="flex items-center text-sm text-gray-500">
+                                        <i class="fas fa-user flex-shrink-0 mr-1.5 text-gray-400"></i>
+                                        <span th:text="${don.utilisateur.nom}"></span>
+                                    </p>
+                                </div>
+                                <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                                    <i class="fas fa-clock flex-shrink-0 mr-1.5 text-gray-400"></i>
+                                    <span th:text="${#temporals.format(don.date, 'dd/MM/yyyy HH:mm')}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html> 

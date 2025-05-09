@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Faire un Don - CharityApp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold">Faire un Don</h1>
+            <a th:href="@{/actions}" class="text-blue-600 hover:text-blue-800">
+                <i class="fas fa-arrow-left mr-2"></i>Retour aux actions
+            </a>
+        </div>
+
+        <form th:action="@{/dons}" th:object="${don}" method="post" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="actionId">
+                    Action Caritative
+                </label>
+                <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="actionId" th:field="*{actionId}" required>
+                    <option value="">Sélectionnez une action</option>
+                    <option th:each="action : ${actions}"
+                            th:value="${action.id}"
+                            th:text="${action.titre + ' - ' + action.organisation.nom + ' (' + #numbers.formatDecimal(action.sommeActuelle, 1, 2) + ' MAD / ' + #numbers.formatDecimal(action.objectifCollecte, 1, 2) + ' MAD)'}">
+                    </option>
+                </select>
+                <p class="text-red-500 text-xs italic" th:if="${#fields.hasErrors('actionId')}" th:errors="*{actionId}"></p>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="montant">
+                    Montant du don (MAD)
+                </label>
+                <div class="relative">
+
+                    <input class="shadow appearance-none border rounded w-full py-2 pl-8 pr-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                           id="montant" th:field="*{montant}" type="number" step="0.01" min="1" required>
+                </div>
+                <p class="text-red-500 text-xs italic" th:if="${#fields.hasErrors('montant')}" th:errors="*{montant}"></p>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="methodePaiement">
+                    Méthode de paiement
+                </label>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="border rounded p-4 cursor-pointer hover:bg-gray-50" onclick="selectPaymentMethod('PAYPAL')">
+                        <input type="radio" id="paypal" th:field="*{methodePaiement}" value="PAYPAL" class="hidden">
+                        <label for="paypal" class="flex items-center cursor-pointer">
+                            <i class="fab fa-paypal text-blue-600 text-2xl mr-2"></i>
+                            <span>PayPal</span>
+                        </label>
+                    </div>
+                    <div class="border rounded p-4 cursor-pointer hover:bg-gray-50" onclick="selectPaymentMethod('CARTE')">
+                        <input type="radio" id="carte" th:field="*{methodePaiement}" value="CARTE" class="hidden">
+                        <label for="carte" class="flex items-center cursor-pointer">
+                            <i class="fas fa-credit-card text-gray-600 text-2xl mr-2"></i>
+                            <span>Carte bancaire</span>
+                        </label>
+                    </div>
+                </div>
+                <p class="text-red-500 text-xs italic" th:if="${#fields.hasErrors('methodePaiement')}" th:errors="*{methodePaiement}"></p>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="message">
+                    Message (optionnel)
+                </label>
+                <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          id="message" th:field="*{message}" rows="3" placeholder="Votre message de soutien..."></textarea>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        type="submit">
+                    Faire un don
+                </button>
+                <a th:href="@{/actions}" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+                    Annuler
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function selectPaymentMethod(method) {
+        document.querySelector(`input[value="${method}"]`).checked = true;
+    }
+</script>
+</body>
+</html> 

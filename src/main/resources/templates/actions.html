@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Actions de Charité - CharityApp</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-50 text-gray-800">
 
@@ -13,49 +14,111 @@
 
     <!-- Lien vers la page d'accueil -->
     <div class="mb-4">
-        <a th:href="@{/}" class="text-blue-600 hover:underline">Retour à la page d'accueil</a>
+        <a th:href="@{/}" class="text-blue-600 hover:underline">
+            <i class="fas fa-arrow-left"></i> Retour à la page d'accueil
+        </a>
     </div>
 
     <!-- Filtre par catégorie -->
     <div class="mb-4">
-        <form method="get" action="/actions">
-            <label for="categorie" class="mr-2">Filtrer par catégorie :</label>
+        <form method="get" action="/actions" class="flex items-center">
+            <label for="categorie" class="mr-2 font-semibold">Filtrer par catégorie :</label>
             <select name="categorie" id="categorie" class="border p-2 rounded">
                 <option value="">Toutes les catégories</option>
-                <option value="EDUCATION">Éducation</option>
-                <option value="SANTE">Santé</option>
-                <option value="ENVIRONNEMENT">Environnement</option>
-                <option value="AUTRE">Autre</option>
+                <option value="EDUCATION" th:selected="${selectedCategorie == 'EDUCATION'}">Éducation</option>
+                <option value="SANTE" th:selected="${selectedCategorie == 'SANTE'}">Santé</option>
+                <option value="ENVIRONNEMENT" th:selected="${selectedCategorie == 'ENVIRONNEMENT'}">Environnement</option>
+                <option value="AUTRE" th:selected="${selectedCategorie == 'AUTRE'}">Autre</option>
             </select>
-            <button type="submit" class="bg-blue-600 text-white p-2 rounded ml-2">Filtrer</button>
+            <button type="submit" class="bg-blue-600 text-white p-2 rounded ml-2 hover:bg-blue-700">
+                <i class="fas fa-filter"></i> Filtrer
+            </button>
         </form>
     </div>
 
     <!-- Affichage des actions de charité -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div th:each="action : ${actions}" class="bg-white p-4 rounded-2xl shadow hover:shadow-lg transition">
-            <!-- Affichage de l'image de l'action, seulement si la collection 'media' n'est pas vide -->
-            <div th:if="${not #lists.isEmpty(action.media)}">
-                <img th:src="@{'/images/' + ${action.media[0]}}" alt="Image de l'action" class="w-full h-56 object-cover rounded-lg">
+        <div th:each="action : ${page.content}" class="bg-white p-4 rounded-2xl shadow hover:shadow-lg transition">
+            <!-- Affichage de l'image de l'action -->
+            <div th:if="${action.logo != null and not #strings.isEmpty(action.logo)}">
+                <img th:src="@{'/images/' + ${action.logo}}"
+                     alt="Image de l'action"
+                     class="w-full h-56 object-cover rounded-lg"
+                     onerror="this.onerror=null; this.src='/images/default-action.jpg';">
             </div>
-            <!-- Message de secours si la collection 'media' est vide -->
-            <div th:if="${#lists.isEmpty(action.media)}">
-                <p class="text-sm text-gray-600">Aucune image disponible pour cette action.</p>
+            <div th:if="${action.logo == null or #strings.isEmpty(action.logo)}"
+                 class="bg-gray-200 h-56 rounded-lg flex items-center justify-center">
+                <img src="/images/default-action.jpg"
+                     alt="Image par défaut"
+                     class="w-full h-56 object-cover rounded-lg">
             </div>
 
-            <h2 class="text-xl font-semibold mb-2" th:text="${action.titre}">Titre de l'action</h2>
+            <h2 class="text-xl font-semibold mb-2 mt-4" th:text="${action.titre}">Titre de l'action</h2>
             <p class="text-sm text-blue-700 mb-2 font-medium" th:if="${action.organisation != null}" th:text="'Organisé par : ' + ${action.organisation.nom}">Nom de l'organisation</p>
 
-            <p class="text-sm text-gray-600 mb-2" th:text="${action.lieu}">Lieu</p>
+            <p class="text-sm text-gray-600 mb-2">
+                <i class="fas fa-map-marker-alt"></i> <span th:text="${action.lieu}">Lieu</span>
+            </p>
             <p class="text-sm mb-2" th:text="${#strings.abbreviate(action.description, 100)}">Description...</p>
+
+            <!-- Barre de progression -->
+            <div class="mb-4">
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div class="bg-blue-600 h-2.5 rounded-full"
+                         th:style="'width: ' + ${(action.sommeActuelle / action.objectifCollecte) * 100} + '%'">
+                    </div>
+                </div>
+                <div class="flex justify-between text-sm mt-1">
+                    <span th:text="${action.sommeActuelle} + ' € collectés'"></span>
+                    <span th:text="${action.objectifCollecte} + ' € objectif'"></span>
+                </div>
+            </div>
+
+            <!-- Boutons d'action -->
             <div class="flex justify-between items-center">
-                <span class="text-green-600 font-bold" th:text="${action.objectifCollecte} + ' € Objectif'">Objectif</span>
-                <a th:href="@{'/actions/' + ${action.id}}" class="text-blue-600 hover:underline text-sm">Voir plus</a>
+
+                <a th:href="@{'/dons?actionId=' + ${action.id}}"
+                   class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-donate"></i> Faire un don
+                </a>
             </div>
         </div>
     </div>
 
+    <!-- Pagination -->
+    <div class="mt-8 flex justify-center items-center space-x-2">
+        <!-- Bouton Précédent -->
+        <a th:if="${page.number > 0}"
+           th:href="@{/actions(page=${page.number - 1}, size=${page.size}, categorie=${selectedCategorie})}"
+           class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+            <i class="fas fa-chevron-left"></i> Précédent
+        </a>
+
+        <!-- Numéros de page -->
+        <div class="flex space-x-2">
+            <a th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+               th:href="@{/actions(page=${i}, size=${page.size}, categorie=${selectedCategorie})}"
+               th:text="${i + 1}"
+               th:class="${page.number == i ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'} + ' px-4 py-2 rounded hover:bg-blue-700 hover:text-white'">
+            </a>
+        </div>
+
+        <!-- Bouton Suivant -->
+        <a th:if="${page.number < page.totalPages - 1}"
+           th:href="@{/actions(page=${page.number + 1}, size=${page.size}, categorie=${selectedCategorie})}"
+           class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+            Suivant <i class="fas fa-chevron-right"></i>
+        </a>
+    </div>
+
+    <!-- Informations sur la pagination -->
+    <div class="mt-4 text-center text-gray-600">
+        <p th:text="'Page ' + ${page.number + 1} + ' sur ' + ${page.totalPages} + ' - ' + ${page.totalElements} + ' actions au total'"></p>
+    </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 
 </body>
 </html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${organisation.id == null ? 'Nouvelle Organisation' : 'Modifier Organisation'}">CharityApp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6" th:text="${organisation.id == null ? 'Nouvelle Organisation' : 'Modifier Organisation'}"></h1>
+
+        <form th:action="@{${organisation.id == null ? '/admin/organisations' : '/admin/organisations/' + organisation.id}}"
+              th:object="${organisation}" method="post" enctype="multipart/form-data"
+              class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="nom">
+                    Nom de l'organisation
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                       id="nom" type="text" th:field="*{nom}" required>
+                <p class="text-red-500 text-xs italic" th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"></p>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="adresse">
+                    Adresse
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                       id="adresse" type="text" th:field="*{adresse}" required>
+                <p class="text-red-500 text-xs italic" th:if="${#fields.hasErrors('adresse')}" th:errors="*{adresse}"></p>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="numeroFiscal">
+                    Numéro Fiscal
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                       id="numeroFiscal" type="text" th:field="*{numeroFiscal}" required>
+                <p class="text-red-500 text-xs italic" th:if="${#fields.hasErrors('numeroFiscal')}" th:errors="*{numeroFiscal}"></p>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="contactPrincipal">
+                    Contact Principal
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                       id="contactPrincipal" type="text" th:field="*{contactPrincipal}" required>
+                <p class="text-red-500 text-xs italic" th:if="${#fields.hasErrors('contactPrincipal')}" th:errors="*{contactPrincipal}"></p>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="telephone">
+                    Téléphone
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                       id="telephone" type="tel" th:field="*{telephone}" required>
+                <p class="text-red-500 text-xs italic" th:if="${#fields.hasErrors('telephone')}" th:errors="*{telephone}"></p>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="logo">
+                    Logo
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                       id="logo" type="file" th:field="*{logo}">
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
+                    Description
+                </label>
+                <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          id="description" th:field="*{description}" rows="4"></textarea>
+                <p class="text-red-500 text-xs italic" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        type="submit">
+                    <span th:text="${organisation.id == null ? 'Créer' : 'Mettre à jour'}"></span>
+                </button>
+                <a th:href="@{/admin/organisations}" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+                    Annuler
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html> 

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${action.id != null ? 'Modifier Action' : 'Nouvelle Action'} + ' - CharityApp'"></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
+            <div class="position-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" th:href="@{/admin/dashboard}">
+                            <i class="fas fa-tachometer-alt me-2"></i>Tableau de bord
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" th:href="@{/admin/organisations}">
+                            <i class="fas fa-building me-2"></i>Organisations
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active text-white" th:href="@{/admin/actions}">
+                            <i class="fas fa-hands-helping me-2"></i>Actions
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" th:href="@{/admin/utilisateurs}">
+                            <i class="fas fa-users me-2"></i>Utilisateurs
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2" th:text="${action.id != null ? 'Modifier Action' : 'Nouvelle Action'}"></h1>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <form th:object="${action}" th:action="@{${action.id != null ? '/admin/actions/' + action.id : '/admin/actions'}}" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="titre" class="form-label">Titre</label>
+                                    <input type="text" class="form-control" id="titre" th:field="*{titre}" required>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('titre')}" th:errors="*{titre}"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Description</label>
+                                    <textarea class="form-control" id="description" th:field="*{description}" rows="4" required></textarea>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="dateDebut" class="form-label">Date de début</label>
+                                            <input type="date" class="form-control" id="dateDebut" th:field="*{dateDebut}" required>
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('dateDebut')}" th:errors="*{dateDebut}"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="dateFin" class="form-label">Date de fin</label>
+                                            <input type="date" class="form-control" id="dateFin" th:field="*{dateFin}" required>
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('dateFin')}" th:errors="*{dateFin}"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="lieu" class="form-label">Lieu</label>
+                                    <input type="text" class="form-control" id="lieu" th:field="*{lieu}" required>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('lieu')}" th:errors="*{lieu}"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="objectifCollecte" class="form-label">Objectif de collecte (€)</label>
+                                    <input type="number" class="form-control" id="objectifCollecte" th:field="*{objectifCollecte}" step="0.01" required>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('objectifCollecte')}" th:errors="*{objectifCollecte}"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="sommeActuelle" class="form-label">Somme actuelle (€)</label>
+                                    <input type="number" class="form-control" id="sommeActuelle" th:field="*{sommeActuelle}" step="0.01" value="0.0" required>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('sommeActuelle')}" th:errors="*{sommeActuelle}"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="organisationId" class="form-label">Organisation</label>
+                                    <select class="form-select" id="organisationId" th:field="*{organisationId}" required>
+                                        <option value="">Sélectionner une organisation</option>
+                                        <option th:each="org : ${organisations}"
+                                                th:value="${org.id}"
+                                                th:text="${org.nom}">
+                                        </option>
+                                    </select>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('organisationId')}" th:errors="*{organisationId}"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="categorie" class="form-label">Catégorie</label>
+                                    <select class="form-select" id="categorie" th:field="*{categorie}" required>
+                                        <option value="">Sélectionner une catégorie</option>
+                                        <option th:each="cat : ${T(ma.emsi.charityapp.entities.ActionCharite.Categorie).values()}"
+                                                th:value="${cat}"
+                                                th:text="${cat}">
+                                        </option>
+                                    </select>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('categorie')}" th:errors="*{categorie}"></div>
+                                </div>
+
+                                <!-- Champ pour le logo -->
+                                <div class="mb-3">
+                                    <label for="logoFile" class="form-label">Logo</label>
+                                    <input type="file" class="form-control" id="logoFile" name="logoFile" accept="image/*">
+                                    <div class="form-text">Format accepté : JPG, PNG, GIF</div>
+                                </div>
+                                <div th:if="${action.logo != null}" class="mb-3">
+                                    <label class="form-label">Logo actuel</label>
+                                    <div>
+                                        <img th:src="@{'/images/' + ${action.logo}}" alt="Logo actuel" style="max-width: 200px;">
+                                    </div>
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-2"></i>
+                                        <span th:text="${action.id != null ? 'Mettre à jour' : 'Créer'}"></span>
+                                    </button>
+                                    <a th:href="@{/admin/actions}" class="btn btn-secondary">
+                                        <i class="fas fa-times me-2"></i>Annuler
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Aide</h5>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Titre :</strong> Donnez un titre clair et concis à votre action.</p>
+                            <p><strong>Description :</strong> Décrivez en détail l'objectif et le déroulement de l'action.</p>
+                            <p><strong>Dates :</strong> Définissez la période pendant laquelle l'action sera active.</p>
+                            <p><strong>Lieu :</strong> Précisez où se déroulera l'action.</p>
+                            <p><strong>Objectif :</strong> Fixez un montant réaliste à atteindre.</p>
+                            <p><strong>Organisation :</strong> Sélectionnez l'organisation responsable.</p>
+                            <p><strong>Catégorie :</strong> Choisissez la catégorie qui correspond le mieux à votre action.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Validation du formulaire
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+</script>
+</body>
+</html> 

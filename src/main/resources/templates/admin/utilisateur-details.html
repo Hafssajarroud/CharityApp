@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Détails de l'utilisateur</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+            <div class="position-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/dashboard}">
+                            <i class="fas fa-home"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/organisations}">
+                            <i class="fas fa-building"></i> Organisations
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/admin/utilisateurs}">
+                            <i class="fas fa-users"></i> Utilisateurs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/actions}">
+                            <i class="fas fa-hands-helping"></i> Actions
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Détails de l'utilisateur</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <a th:href="@{/admin/utilisateurs}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Retour
+                    </a>
+                </div>
+            </div>
+
+            <!-- Alert messages -->
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${success}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <!-- User information -->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Informations personnelles</h5>
+                            <p><strong>Nom:</strong> <span th:text="${user.nom}"></span></p>
+                            <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+                            <p><strong>Rôle:</strong> <span th:text="${user.role}"></span></p>
+                            <p><strong>Statut:</strong>
+                                <span th:if="${user.enabled}" class="badge bg-success">Actif</span>
+                                <span th:unless="${user.enabled}" class="badge bg-danger">Inactif</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Statistiques</h5>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card bg-primary text-white">
+                                        <div class="card-body">
+                                            <h6 class="card-title">Total des dons</h6>
+                                            <h3 th:text="${#numbers.formatDecimal(stats.totalDonations, 1, 2)} + ' €'"></h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card bg-success text-white">
+                                        <div class="card-body">
+                                            <h6 class="card-title">Nombre de dons</h6>
+                                            <h3 th:text="${stats.donationCount}"></h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card bg-info text-white">
+                                        <div class="card-body">
+                                            <h6 class="card-title">Dernier don</h6>
+
+                                            <h3 th:if="${stats.lastDonation}" th:text="${#temporals.format(stats.lastDonation.date, 'dd/MM/yyyy')}"></h3>
+                                            <h3 th:unless="${stats.lastDonation}">-</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Donation history -->
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Historique des dons</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Action</th>
+                                <th>Montant</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="don : ${dons}">
+                                <td th:text="${#temporals.format(don.date, 'dd/MM/yyyy HH:mm')}"></td>
+                                <td th:text="${don.actionCharite.titre}"></td>
+                                <td th:text="${#numbers.formatDecimal(don.montant, 1, 2)} + ' €'"></td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(dons)}">
+                                <td colspan="3" class="text-center">Aucun don effectué</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

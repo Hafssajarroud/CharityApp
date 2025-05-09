@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Historique des Dons - CharityApp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Historique des Dons</h1>
+            <a th:href="@{/actions}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                <i class="fas fa-arrow-left mr-2"></i>Retour aux actions
+            </a>
+        </div>
+
+        <div th:if="${dons.empty}" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 text-center">
+            <i class="fas fa-gift text-gray-400 text-6xl mb-4"></i>
+            <h2 class="text-2xl font-semibold text-gray-700 mb-2">Aucun don effectué</h2>
+            <p class="text-gray-600 mb-4">Vous n'avez pas encore fait de don. Commencez à soutenir des causes qui vous tiennent à cœur !</p>
+            <a th:href="@{/actions}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                <i class="fas fa-heart mr-2"></i>Faire un don
+            </a>
+        </div>
+
+        <div th:if="${!dons.empty}" class="space-y-4">
+            <div th:each="don : ${dons}" class="bg-white shadow-md rounded-lg overflow-hidden">
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800" th:text="${don.actionCharite.titre}">Titre de l'action</h3>
+                            <p class="text-gray-600" th:text="${don.actionCharite.organisation.nom}">Nom de l'organisation</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-2xl font-bold text-blue-600" th:text="${#numbers.formatDecimal(don.montant, 1, 2)} + ' MAD'">0.00 MAD</span>
+                            <p class="text-sm text-gray-500" th:text="${#temporals.format(don.date, 'dd/MM/yyyy HH:mm')}">Date</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center text-sm text-gray-500">
+                            <span>
+                                <i class="fas fa-credit-card mr-1"></i>
+                                <span th:text="${don.methodePaiement}">Méthode de paiement</span>
+                            </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 text-center">
+            <a th:href="@{/actions}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                <i class="fas fa-heart mr-2"></i>Faire un nouveau don
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

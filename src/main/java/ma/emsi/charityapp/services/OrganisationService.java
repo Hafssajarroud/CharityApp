@@ -1,36 +1,27 @@
 package ma.emsi.charityapp.services;
 
 import ma.emsi.charityapp.entities.Organisation;
-import ma.emsi.charityapp.repositories.OrganisationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import ma.emsi.charityapp.entities.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-@Service
-public class OrganisationService {
-
-    private final OrganisationRepository organisationRepository;
-
-    @Autowired
-    public OrganisationService(OrganisationRepository organisationRepository) {
-        this.organisationRepository = organisationRepository;
-    }
-
-    public List<Organisation> getAllOrganisations() {
-        return organisationRepository.findAll();
-    }
-
-    public Optional<Organisation> getOrganisationById(int id) {
-        return organisationRepository.findById(id);
-    }
-
-    public Organisation saveOrganisation(Organisation organisation) {
-        return organisationRepository.save(organisation);
-    }
-
-    public void deleteOrganisation(int id) {
-        organisationRepository.deleteById(id);
-    }
+public interface OrganisationService {
+    Organisation createOrganisation(Organisation organisation, User admin);
+    Page<Organisation> getAllOrganisations(Pageable pageable);
+    Page<Organisation> getOrganisationsByStatus(boolean isValid, Pageable pageable);
+    Optional<Organisation> getOrganisationById(int id);
+    Optional<Organisation> getOrganisationByAdminId(int adminId);
+    Organisation updateOrganisation(int id, Organisation organisationDetails);
+    void deleteOrganisation(int id);
+    void validateOrganisation(int id);
+    String saveLogo(MultipartFile file) throws IOException;
+    List<Organisation> getAllOrganisations();
+    long countAllOrganisations();
+    List<Organisation> getRecentOrganisations();
+    boolean isOrganisationAdmin(int organisationId, int userId);
 }

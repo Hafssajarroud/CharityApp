@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Accueil - Mon Projet Solidaire</title>
@@ -7,94 +7,249 @@
 
     <!-- Bootstrap + Google Fonts + FontAwesome + AOS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
 
     <style>
+        :root {
+            --primary-color: #0077b6; /* Bleu foncé pour la confiance */
+            --secondary-color: #2a9d8f; /* Vert pour l'espoir */
+            --accent-color: #f4a261; /* Orange pour l'action */
+            --light-color: #e9f5ef; /* Vert très clair */
+            --dark-color: #264653; /* Bleu très foncé */
+        }
 
-        .text-pink {
-            color: #FF6699 !important;
+        .text-primary-color {
+            color: var(--primary-color) !important;
+        }
+
+        .text-secondary-color {
+            color: var(--secondary-color) !important;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('/images/image.png') no-repeat center center fixed;
-            background-size: cover;
-            color: #2e2e2e;
+            background-color: #f8f9fa;
+            color: #333;
         }
 
-
         .navbar {
-            background-color: #fff;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         .nav-link {
             font-weight: 500;
-            color: #333 !important;
+            color: var(--dark-color) !important;
         }
 
-        .btn-pink {
-            background-color: #FF6699;
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+
+        .btn-primary-color {
+            background-color: var(--primary-color);
             color: white;
             border: none;
+            font-weight: 600;
+            padding: 10px 25px;
         }
 
-        .btn-pink:hover {
-            background-color: #e85588;
+        .btn-primary-color:hover {
+            background-color: #005f92;
+            color: white;
+        }
+
+        .btn-accent {
+            background-color: var(--accent-color);
+            color: white;
+            font-weight: 600;
+            padding: 10px 25px;
+        }
+
+        .btn-accent:hover {
+            background-color: #e6913f;
+            color: white;
         }
 
         .hero-section {
-            padding: 80px 0;
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--light-color) 0%, white 100%);
         }
 
         .hero-section h1 {
             font-size: 3rem;
             font-weight: 900;
+            color: var(--dark-color);
+            line-height: 1.2;
         }
 
         .hero-section p {
             font-size: 1.2rem;
-            margin: 20px 0;
+            margin: 25px 0;
+            color: #555;
         }
 
         .illustration {
             max-width: 100%;
             height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
         .section-title {
             font-size: 2.5rem;
-            font-weight: bold;
+            font-weight: 700;
             margin-bottom: 1.5rem;
             text-align: center;
+            color: var(--dark-color);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 4px;
+            background: var(--secondary-color);
+            bottom: -10px;
+            left: 25%;
+            border-radius: 2px;
         }
 
         .icon-circle {
-            background-color: #FF6699;
+            background-color: var(--primary-color);
             color: white;
             border-radius: 50%;
-            padding: 20px;
-            display: inline-block;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 2rem;
+            margin: 0 auto 20px;
+        }
+
+        .bg-light-section {
+            background-color: var(--light-color);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+
+        .cause-card {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+        }
+
+        .cause-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+
+        .cause-card .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .cause-card .card-title {
+            color: var(--dark-color);
+            font-weight: 700;
+        }
+
+        .cause-card .progress {
+            height: 8px;
+            border-radius: 4px;
+        }
+
+        .cause-card .progress-bar {
+            background-color: var(--secondary-color);
         }
 
         footer {
-            background-color: #ffc6d4;
+            background-color: var(--dark-color);
             color: white;
-        }
-
-        footer input,
-        footer textarea {
-            background-color: white;
-            color: #333;
-        }
-
-        footer .form-control::placeholder {
-            color: #999;
+            padding: 60px 0 30px;
         }
 
         footer h5 {
+            color: white;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        footer a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .social-icons a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            margin-right: 10px;
+            transition: all 0.3s;
+        }
+
+        .social-icons a:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+
+        .newsletter-input {
+            background-color: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 12px 15px;
+        }
+
+        .newsletter-input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .newsletter-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            font-weight: 600;
+            border: none;
+            padding: 12px 20px;
+        }
+
+        .newsletter-btn:hover {
+            background-color: #23887a;
             color: white;
         }
     </style>
@@ -102,129 +257,495 @@
 <body>
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-light sticky-top">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="/">Projet Solidaire</a>
+        <a class="navbar-brand fw-bold fs-3 text-primary-color" href="/">
+            <i class="fas fa-hands-helping me-2"></i>Solidarité
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarContent">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" th:href="@{/organisation}">Organisation</a></li>
-                <li class="nav-item"><a class="nav-link" href="/actions">Actions de Charité</a></li>
-                <li class="nav-item"><a class="nav-link" href="/dons">Don</a></li>
-                <li class="nav-item"><a class="nav-link" href="/participations">Participation</a></li>
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item mx-2"><a class="nav-link" th:href="@{/organisation}">Organisations</a></li>
+                <li class="nav-item mx-2"><a class="nav-link" href="/actions">Nos Actions</a></li>
+                <li class="nav-item mx-2"><a class="nav-link" href="/dons/historique">Mes Dons</a></li>
+                <li class="nav-item mx-2"><a class="nav-link" href="/participations">S'Engager</a></li>
             </ul>
+
+            <!-- Menu utilisateur connecté -->
+            <div class="d-flex align-items-center" th:if="${#authorization.expression('isAuthenticated()')}">
+                <div class="dropdown">
+                    <button class="btn btn-link nav-link dropdown-toggle d-flex align-items-center" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle me-2"></i>
+                        <span th:text="${#authentication.name}"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <!-- Menu pour les organisateurs -->
+                        <li th:if="${#authorization.expression('hasRole(''ROLE_ORGANISATION'')')}">
+                            <a class="dropdown-item" th:href="@{/organisation/dashboard}">
+                                <i class="fas fa-tachometer-alt me-2"></i>Tableau de bord
+                            </a>
+                        </li>
+                        <!-- Menu pour les administrateurs -->
+                        <li th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                            <a class="dropdown-item" th:href="@{/admin/dashboard}">
+                                <i class="fas fa-cog me-2"></i>Administration
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/profile}">
+                                <i class="fas fa-user me-2"></i>Mon profil
+                            </a>
+                        </li>
+                        <li>
+                            <form th:action="@{/logout}" method="post" class="d-inline">
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Déconnexion
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+                <a href="/dons" class="btn btn-primary-color rounded-pill ms-3">Donner Maintenant</a>
+            </div>
+
+            <!-- Formulaire de connexion -->
+            <div class="d-flex align-items-center" th:unless="${#authorization.expression('isAuthenticated()')}">
+                <div class="dropdown">
+                    <button class="btn btn-link nav-link dropdown-toggle" type="button" id="loginDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user me-2"></i>Connexion
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end p-3" style="min-width: 300px;">
+                        <form th:action="@{/auth/login}" method="post">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Mot de passe</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">Se connecter</button>
+                            </div>
+                            <div class="text-center mt-2">
+                                <a th:href="@{/auth/register}" class="btn btn-link">Créer un compte</a>
+                            </div>
+                        </form>
+                    </ul>
+                </div>
+                <a href="/dons" class="btn btn-primary-color rounded-pill ms-3">Donner Maintenant</a>
+            </div>
         </div>
     </div>
 </nav>
 
 <!-- Hero -->
-<section class="hero-section text-center text-md-start">
+<section class="hero-section">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-md-6">
-                <h1>Actions de Charité en vedette</h1>
-                <p>Bienvenue sur Mon Projet Solidaire, une plateforme dédiée à la promotion de l'entraide et de la solidarité. Notre mission est de rassembler des individus et des organisations autour de causes humanitaires.</p>
-                <a href="#" class="btn btn-pink btn-lg px-4">Participation</a>
-                <a href="#" class="btn btn-link text-decoration-underline text-dark fw-semibold">voir plus</a>
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <h1 data-aos="fade-up">Chaque don compte pour changer des vies</h1>
+                <p data-aos="fade-up" data-aos-delay="100">
+                    Rejoignez notre communauté solidaire et participez à des actions concrètes pour aider ceux qui en ont le plus besoin. Votre soutien fait la différence.
+                </p>
+                <div class="d-flex flex-wrap gap-3" data-aos="fade-up" data-aos-delay="200">
+                    <a href="/dons" class="btn btn-primary-color rounded-pill">Faire un Don</a>
+                    <a href="/participations" class="btn btn-outline-dark rounded-pill">Devenir Bénévole</a>
+                </div>
+
+                <div class="mt-4 d-flex flex-wrap gap-4" data-aos="fade-up" data-aos-delay="300">
+                    <div>
+                        <div class="stat-number">15K+</div>
+                        <div class="stat-label">Personnes aidées</div>
+                    </div>
+                    <div>
+                        <div class="stat-number">200+</div>
+                        <div class="stat-label">Projets réalisés</div>
+                    </div>
+                    <div>
+                        <div class="stat-number">95%</div>
+                        <div class="stat-label">Dons reversés</div>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6 text-center">
-                <img src="/images/image.png" alt="Illustration" class="illustration">
+            <div class="col-lg-6 text-center" data-aos="fade-left">
+                <img src="/images/image.png" alt="Personnes solidaires" class="illustration">
             </div>
+        </div>
+    </div>
+</section>
+
+<!-- Causes urgentes -->
+<section class="py-5 my-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title" data-aos="fade-up">Causes Urgentes</h2>
+            <p class="lead mx-auto" style="max-width: 700px;" data-aos="fade-up" data-aos-delay="100">
+                Découvrez nos campagnes en cours et contribuez à celles qui vous touchent le plus.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="cause-card card h-100">
+                    <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000" class="card-img-top" alt="Education">
+                    <div class="card-body">
+                        <h5 class="card-title">Éducation pour tous</h5>
+                        <p class="card-text">Scolarisation d'enfants défavorisés dans les zones rurales.</p>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <small>Collecté: 8,500€</small>
+                                <small>Objectif: 15,000€</small>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 56%"></div>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-primary-color w-100">Soutenir</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="cause-card card h-100">
+                    <img src="https://images.pexels.com/photos/6646917/pexels-photo-6646917.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="card-img-top" alt="Alimentation">
+                    <div class="card-body">
+                        <h5 class="card-title">Lutte contre la faim</h5>
+                        <p class="card-text">Distribution de repas dans les quartiers défavorisés.</p>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <small>Collecté: 12,300€</small>
+                                <small>Objectif: 20,000€</small>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 61%"></div>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-primary-color w-100">Soutenir</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="400">
+                <div class="cause-card card h-100">
+                    <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000" class="card-img-top" alt="Santé">
+                    <div class="card-body">
+                        <h5 class="card-title">Accès aux soins</h5>
+                        <p class="card-text">Financement de soins médicaux pour les plus démunis.</p>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <small>Collecté: 23,750€</small>
+                                <small>Objectif: 30,000€</small>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 79%"></div>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-primary-color w-100">Soutenir</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-5" data-aos="fade-up">
+            <a href="/actions" class="btn btn-outline-primary-color rounded-pill px-4">Voir toutes nos causes</a>
         </div>
     </div>
 </section>
 
 <!-- Notre Mission -->
-<section class="py-5 bg-light" data-aos="fade-up">
+<section class="py-5 bg-light-section" data-aos="fade-up">
     <div class="container">
-        <h2 class="section-title">Notre Mission</h2>
-        <p class="text-center fs-5 px-md-5">
-            Nous croyons en la force de la solidarité. Notre mission est de connecter les individus désireux d’aider avec les organisations qui ont un réel impact sur le terrain. En participant à des actions concrètes, vous contribuez à bâtir un avenir plus équitable et humain.
-        </p>
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <img src="https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Notre Mission" class="img-fluid rounded shadow">
+            </div>
+            <div class="col-lg-6">
+                <h2 class="section-title text-start">Notre Mission</h2>
+                <p class="fs-5">
+                    Depuis 2010, notre organisation s'engage à créer un impact social positif en connectant les donateurs avec des causes qui changent réellement des vies.
+                </p>
+                <ul class="list-unstyled">
+                    <li class="mb-3"><i class="fas fa-check-circle text-secondary-color me-2"></i> Transparence totale sur l'utilisation des fonds</li>
+                    <li class="mb-3"><i class="fas fa-check-circle text-secondary-color me-2"></i> 95% des dons directement reversés aux bénéficiaires</li>
+                    <li class="mb-3"><i class="fas fa-check-circle text-secondary-color me-2"></i> Suivi régulier des projets financés</li>
+                    <li class="mb-3"><i class="fas fa-check-circle text-secondary-color me-2"></i> Engagement pour un développement durable</li>
+                </ul>
+                <a href="/organisation" class="btn btn-primary-color mt-3">En savoir plus</a>
+            </div>
+        </div>
     </div>
 </section>
 
 <!-- Comment ça marche -->
-<section class="py-5" data-aos="fade-up">
+<section class="py-5 my-5" data-aos="fade-up">
     <div class="container">
-        <h2 class="section-title">Comment ça marche ?</h2>
+        <div class="text-center mb-5">
+            <h2 class="section-title">Comment aider ?</h2>
+            <p class="lead mx-auto" style="max-width: 700px;">
+                Plusieurs façons de soutenir notre action et de participer au changement.
+            </p>
+        </div>
         <div class="row text-center">
             <div class="col-md-4" data-aos="zoom-in" data-aos-delay="100">
                 <div class="mb-3">
-                    <span class="icon-circle"><i class="fas fa-search"></i></span>
+                    <span class="icon-circle"><i class="fas fa-hand-holding-usd"></i></span>
                 </div>
-                <h5 class="fw-bold">1. Explorez</h5>
-                <p>Trouvez une cause ou une action de charité qui vous tient à cœur.</p>
+                <h5 class="fw-bold">1. Faire un don</h5>
+                <p>Un don ponctuel ou régulier pour soutenir nos actions sur le terrain.</p>
+                <a href="/dons" class="btn btn-sm btn-outline-primary-color">Donner</a>
             </div>
             <div class="col-md-4" data-aos="zoom-in" data-aos-delay="200">
                 <div class="mb-3">
-                    <span class="icon-circle"><i class="fas fa-hand-holding-heart"></i></span>
+                    <span class="icon-circle"><i class="fas fa-hands-helping"></i></span>
                 </div>
-                <h5 class="fw-bold">2. Participez</h5>
-                <p>Inscrivez-vous et engagez-vous dans une action concrète ou un don.</p>
+                <h5 class="fw-bold">2. Devenir bénévole</h5>
+                <p>Donnez de votre temps et compétences pour nos différentes missions.</p>
+                <a href="/participations" class="btn btn-sm btn-outline-primary-color">S'engager</a>
             </div>
             <div class="col-md-4" data-aos="zoom-in" data-aos-delay="300">
                 <div class="mb-3">
-                    <span class="icon-circle"><i class="fas fa-check-circle"></i></span>
+                    <span class="icon-circle"><i class="fas fa-bullhorn"></i></span>
                 </div>
-                <h5 class="fw-bold">3. Contribuez</h5>
-                <p>Votre action aide à améliorer la vie des personnes dans le besoin.</p>
+                <h5 class="fw-bold">3. Sensibiliser</h5>
+                <p>Parlez de nous autour de vous et relayez nos campagnes.</p>
+                <a href="#" class="btn btn-sm btn-outline-primary-color">Partager</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Témoignages -->
+<section class="py-5 bg-light-section" data-aos="fade-up">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Ils nous soutiennent</h2>
+            <p class="lead mx-auto" style="max-width: 700px;">
+                Découvrez ce que disent nos donateurs et bénévoles.
+            </p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <div class="mb-3 text-accent-color">
+                            <i class="fas fa-quote-left fs-1 opacity-25"></i>
+                        </div>
+                        <p class="card-text mb-4">
+                            "Je donne régulièrement car je sais que mon argent est utilisé à bon escient. Les rapports transparents me permettent de voir l'impact concret de mon don."
+                        </p>
+                        <div class="d-flex align-items-center">
+                            <img src="https://randomuser.me/api/portraits/women/43.jpg" class="rounded-circle me-3" alt="Avatar">
+                            <div>
+                                <h6 class="mb-0 fw-bold">Amélie Martin</h6>
+                                <small class="text-muted">Donatrice depuis 2018</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <div class="mb-3 text-accent-color">
+                            <i class="fas fa-quote-left fs-1 opacity-25"></i>
+                        </div>
+                        <p class="card-text mb-4">
+                            "J'ai participé à une mission humanitaire avec cette association et ce fut une expérience incroyable. Professionnalisme et impact réel sur le terrain."
+                        </p>
+                        <div class="d-flex align-items-center">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="rounded-circle me-3" alt="Avatar">
+                            <div>
+                                <h6 class="mb-0 fw-bold">Thomas Petit</h6>
+                                <small class="text-muted">Bénévole</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <div class="mb-3 text-accent-color">
+                            <i class="fas fa-quote-left fs-1 opacity-25"></i>
+                        </div>
+                        <p class="card-text mb-4">
+                            "En tant qu'entreprise, nous sommes fiers de soutenir cette association qui aligne parfaitement valeurs sociales et résultats concrets."
+                        </p>
+                        <div class="d-flex align-items-center">
+                            <img src="https://randomuser.me/api/portraits/women/65.jpg" class="rounded-circle me-3" alt="Avatar">
+                            <div>
+                                <h6 class="mb-0 fw-bold">Sarah Cohen</h6>
+                                <small class="text-muted">Partenaire corporate</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter -->
+<section class="py-5 my-5" data-aos="fade-up">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center bg-primary-color p-5 rounded-3" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);">
+                <h2 class="text-white mb-4">Restez informé</h2>
+                <p class="text-white mb-4 lead">
+                    Abonnez-vous à notre newsletter pour recevoir des nouvelles de nos actions et l'impact de votre soutien.
+                </p>
+                <form class="row g-2 justify-content-center">
+                    <div class="col-md-8">
+                        <input type="email" class="form-control form-control-lg" placeholder="Votre email">
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-accent btn-lg w-100">S'abonner</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Footer -->
-<!-- Footer -->
-<footer class="py-4 mt-5" style="background-color: #ffc6d4; color: white;">
+<footer>
     <div class="container">
-        <div class="row align-items-start gy-4">
-            <!-- Formulaire de contact -->
-            <div class="col-md-6">
-                <h5 class="fw-bold mb-2">Contactez-nous</h5>
-                <form>
-                    <div class="mb-2">
-                        <input type="text" class="form-control form-control-sm" placeholder="Votre nom" required>
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <h5><i class="fas fa-hands-helping me-2"></i>Solidarité</h5>
+                <p class="mt-3" style="opacity: 0.8;">
+                    Nous croyons en un monde où chacun peut vivre dignement. Rejoignez-nous dans cette mission humanitaire et solidaire.
+                </p>
+                <div class="d-flex align-items-center mt-3">
+                    <i class="fas fa-certificate fs-3 text-secondary-color me-3"></i>
+                    <div>
+                        <small class="d-block fw-bold">Association reconnue d'utilité publique</small>
+                        <small class="d-block" style="opacity: 0.8;">Depuis 2010</small>
                     </div>
-                    <div class="mb-2">
-                        <input type="email" class="form-control form-control-sm" placeholder="Votre email" required>
-                    </div>
-                    <div class="mb-2">
-                        <textarea class="form-control form-control-sm" rows="3" placeholder="Votre message" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-sm btn-light fw-semibold">Envoyer</button>
-                </form>
+                </div>
+                <div class="social-icons mt-4">
+                    <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" title="Twitter"><i class="fab fa-x-twitter"></i></a>
+                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
             </div>
 
-            <!-- Réseaux sociaux -->
-            <div class="col-md-6 text-md-end">
-                <h5 class="fw-bold mb-2">Suivez-nous</h5>
-                <p class="mb-1">Rejoignez-nous sur les réseaux :</p>
-                <div>
-                    <a href="#" class="text-white me-3 fs-5"><i class="fab fa-facebook"></i></a>
-                    <a href="#" class="text-white me-3 fs-5"><i class="fab fa-linkedin"></i></a>
-                    <a href="#" class="text-white me-3 fs-5"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="text-white fs-5"><i class="fab fa-x-twitter"></i></a>
+            <div class="col-lg-2 col-md-4">
+                <h5>Navigation</h5>
+                <ul class="footer-links">
+                    <li><a href="/"><i class="fas fa-chevron-right me-2 small"></i>Accueil</a></li>
+                    <li><a href="/organisation"><i class="fas fa-chevron-right me-2 small"></i>Notre Mission</a></li>
+                    <li><a href="/actions"><i class="fas fa-chevron-right me-2 small"></i>Nos Actions</a></li>
+                    <li><a href="/dons"><i class="fas fa-chevron-right me-2 small"></i>Faire un Don</a></li>
+                    <li><a href="/participations"><i class="fas fa-chevron-right me-2 small"></i>S'Engager</a></li>
+                    <li><a href="/actualites"><i class="fas fa-chevron-right me-2 small"></i>Actualités</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-4">
+                <h5>Contactez-nous</h5>
+                <ul class="footer-links">
+                    <li class="mb-3">
+                        <div class="d-flex">
+                            <i class="fas fa-map-marker-alt me-3 mt-1 text-secondary-color"></i>
+                            <span>123 Rue Solidaire<br>20000 Casablanca, Maroc</span>
+                        </div>
+                    </li>
+                    <li class="mb-3">
+                        <div class="d-flex">
+                            <i class="fas fa-phone me-3 text-secondary-color"></i>
+                            <span>+212 687542154<br><small>(9h-18h, du lundi au vendredi)</small></span>
+                        </div>
+                    </li>
+                    <li class="mb-3">
+                        <div class="d-flex">
+                            <i class="fas fa-envelope me-3 text-secondary-color"></i>
+                            <span>contact@solidarite.org<br>dons@solidarite.org</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-4">
+                <h5>Transparence</h5>
+                <div class="mb-4">
+                    <a href="#" class="d-block mb-2 text-decoration-none">
+                        <div class="d-flex align-items-center bg-dark rounded p-2" style="background: rgba(255,255,255,0.1) !important;">
+                            <i class="fas fa-file-alt me-3 text-secondary-color"></i>
+                            <span>Rapport annuel 2024</span>
+                        </div>
+                    </a>
+                    <a href="#" class="d-block text-decoration-none">
+                        <div class="d-flex align-items-center bg-dark rounded p-2" style="background: rgba(255,255,255,0.1) !important;">
+                            <i class="fas fa-chart-pie me-3 text-secondary-color"></i>
+                            <span>Utilisation des dons</span>
+                        </div>
+                    </a>
+                </div>
+
+                <h5>Newsletter</h5>
+                <p style="opacity: 0.8; font-size: 0.9rem;">
+                    Recevez nos actualités et l'impact de votre soutien.
+                </p>
+                <form class="mt-3">
+                    <div class="input-group mb-3">
+                        <input type="email" class="form-control newsletter-input" placeholder="Votre email" required>
+                        <button class="btn newsletter-btn" type="submit">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="newsletterConsent" required>
+                        <label class="form-check-label small" for="newsletterConsent" style="opacity: 0.8;">
+                            J'accepte de recevoir les communications par email
+                        </label>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <hr class="mt-5" style="border-color: rgba(255,255,255,0.1);">
+
+        <div class="row align-items-center">
+            <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                <p class="mb-0 small" style="opacity: 0.6;">
+                    &copy; 2025 Solidarité - Association loi 1901 reconnue d'utilité publique
+                </p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <div class="d-flex flex-wrap justify-content-center justify-content-md-end gap-3">
+                    <a href="#" class="small" style="opacity: 0.6;">Mentions légales</a>
+                    <a href="#" class="small" style="opacity: 0.6;">Politique de confidentialité</a>
+                    <a href="#" class="small" style="opacity: 0.6;">CGU</a>
+                    <a href="#" class="small" style="opacity: 0.6;">Cookies</a>
+                    <a href="#" class="small" style="opacity: 0.6;">Plan du site</a>
                 </div>
             </div>
         </div>
 
-        <hr class="my-3 border-white">
-
-        <div class="text-center small">
-            &copy; 2025 Mon Projet Solidaire. Tous droits réservés.
+        <div class="text-center mt-4">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/France_Logo_Reconnu_d%27Utilite_Publique.svg/1200px-France_Logo_Reconnu_d%27Utilite_Publique.svg.png" alt="Don déductible" class="me-3" style="opacity: 0.8;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Don_en_Confiance_Logo.svg/1200px-Don_en_Confiance_Logo.svg.png" alt="Label qualité" style="opacity: 0.8;">
         </div>
     </div>
 </footer>
-
-
-<!-- JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 <script>
-    AOS.init();
+    AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true
+    });
 </script>
 </body>
 </html>

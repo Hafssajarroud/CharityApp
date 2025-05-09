@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Organisations - CharityApp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
+            <div class="position-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" th:href="@{/admin/dashboard}">
+                            <i class="fas fa-tachometer-alt me-2"></i>Tableau de bord
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active text-white" th:href="@{/admin/organisations}">
+                            <i class="fas fa-building me-2"></i>Organisations
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" th:href="@{/admin/actions}">
+                            <i class="fas fa-hands-helping me-2"></i>Actions
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" th:href="@{/admin/utilisateurs}">
+                            <i class="fas fa-users me-2"></i>Utilisateurs
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Gestion des Organisations</h1>
+            </div>
+
+            <!-- Messages d'alerte -->
+            <div th:if="${success != null}" class="alert alert-success" role="alert" th:text="${success}"></div>
+            <div th:if="${error != null}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+
+            <!-- Liste des organisations -->
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Contact</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="org : ${organisations}">
+                        <td th:text="${org.id}"></td>
+                        <td th:text="${org.nom}"></td>
+                        <td th:text="${org.contactPrincipal}"></td>
+                        <td>
+                            <span th:if="${org.statutValidation}" class="badge bg-success">Validée</span>
+                            <span th:unless="${org.statutValidation}" class="badge bg-warning">En attente</span>
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a th:href="@{/admin/organisations/{id}/edit(id=${org.id})}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form th:action="@{/admin/organisations/{id}/validate(id=${org.id})}" method="post" style="display: inline;">
+                                    <button type="submit" class="btn btn-sm btn-success" th:if="${!org.statutValidation}">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </form>
+                                <form th:action="@{/admin/organisations/{id}/delete(id=${org.id})}" method="post" style="display: inline;">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette organisation ?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

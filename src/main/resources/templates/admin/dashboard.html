@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            height: 100vh;
+            background-color: #343a40;
+        }
+
+        .sidebar .nav-link {
+            color: #adb5bd;
+        }
+
+        .sidebar .nav-link.active,
+        .sidebar .nav-link:hover {
+            color: #fff;
+            background-color: #495057;
+        }
+
+        .dashboard-card {
+            border-radius: 1rem;
+            transition: 0.3s;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block sidebar shadow-sm">
+            <div class="position-sticky p-3">
+                <h4 class="text-white">Admin Panel</h4>
+                <ul class="nav flex-column mt-4">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">
+                            <i class="bi bi-speedometer2"></i> Tableau de bord
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/organisations}">
+                            <i class="bi bi-building"></i> Organisations
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/actions}">
+                            <i class="bi bi-hand-heart"></i> Actions caritatives
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/utilisateurs}">
+                            <i class="bi bi-people"></i> Utilisateurs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/logout}">
+                            <i class="bi bi-box-arrow-right"></i> Déconnexion
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-4">
+                <h2>Bienvenue sur le tableau de bord</h2>
+                <div class="btn-toolbar mb-2 mb-md-0">
+
+                </div>
+            </div>
+
+            <!-- Dashboard Cards -->
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card dashboard-card shadow-sm p-3">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-building"></i> Organisations</h5>
+                            <p class="card-text">Voir et gérer les organisations enregistrées.</p>
+                            <a th:href="@{/admin/organisations}" class="btn btn-outline-primary btn-sm">Gérer</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card dashboard-card shadow-sm p-3">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-hand-heart"></i> Actions Caritatives</h5>
+                            <p class="card-text">Suivi et création des initiatives de charité.</p>
+                            <a th:href="@{/admin/actions}" class="btn btn-outline-success btn-sm">Gérer</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card dashboard-card shadow-sm p-3">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-people"></i> Utilisateurs</h5>
+                            <p class="card-text">Voir les profils et historiques de dons.</p>
+                            <a th:href="@{/admin/utilisateurs}" class="btn btn-outline-secondary btn-sm">Voir</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Optionally, stats or graphs can go here -->
+            <!-- ... -->
+
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,6 +1,9 @@
 package ma.emsi.charityapp.entities;
 import jakarta.persistence.*;
 import lombok.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Min;
+
 
 import java.time.LocalDateTime;
 
@@ -14,9 +17,13 @@ public class Don {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
+    @NotNull
+    @Min(1)
     private double montant;
+    @NotNull
     private LocalDateTime date;
+
+    @NotNull
 
     @Enumerated(EnumType.STRING)
     private MethodePaiement methodePaiement;
@@ -28,9 +35,5 @@ public class Don {
     @ManyToOne
     @JoinColumn(name = "action_id")
     private ActionCharite actionCharite;
-}
-
-enum MethodePaiement {
-    PAYPAL, STRIPE
 }
 

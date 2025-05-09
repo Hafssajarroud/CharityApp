@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Actions - CharityApp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .action-card {
+            transition: transform 0.2s;
+        }
+        .action-card:hover {
+            transform: translateY(-5px);
+        }
+        .action-image {
+            height: 200px;
+            object-fit: cover;
+        }
+        .stats-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
+            <div class="position-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" th:href="@{/admin/dashboard}">
+                            <i class="fas fa-tachometer-alt me-2"></i>Tableau de bord
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" th:href="@{/admin/organisations}">
+                            <i class="fas fa-building me-2"></i>Organisations
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active text-white" th:href="@{/admin/actions}">
+                            <i class="fas fa-hands-helping me-2"></i>Actions
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" th:href="@{/admin/utilisateurs}">
+                            <i class="fas fa-users me-2"></i>Utilisateurs
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="container-fluid py-4">
+                <div class="row mb-4">
+                    <div class="col">
+                        <h2 class="text-primary">Gestion des Actions</h2>
+                    </div>
+                    <div class="col text-end">
+                        <a th:href="@{/admin/actions/new}" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Nouvelle Action
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Messages -->
+                <div th:if="${success != null and not #strings.isEmpty(success)}" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <span th:text="${success}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <div th:if="${error != null and not #strings.isEmpty(error)}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <span th:text="${error}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+                <!-- Statistiques -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card stats-card bg-primary text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Actions</h5>
+                                <h2 th:text="${stats.totalActions}">0</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stats-card bg-success text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">Actions Actives</h5>
+                                <h2 th:text="${stats.activeActions}">0</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stats-card bg-warning text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">Actions Archivées</h5>
+                                <h2 th:text="${stats.archivedActions}">0</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stats-card bg-info text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">Don Moyen</h5>
+                                <h2 th:text="${#numbers.formatDecimal(stats.averageDonation, 0, 'POINT', 2, 'COMMA')}">0</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Liste des Actions -->
+                <div class="row">
+                    <div th:each="action : ${actions}" class="col-md-4 mb-4">
+                        <div class="card action-card h-100">
+                            <img th:if="${action.logo != null}" th:src="@{'/images/' + ${action.logo}}" class="card-img-top action-image" alt="Logo de l'action">
+                            <img th:unless="${action.logo != null}" src="/images/default-action.jpg" class="card-img-top action-image" alt="Image par défaut">
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${action.titre}">Titre de l'action</h5>
+                                <p class="card-text" th:text="${action.description}">Description de l'action</p>
+                                <div class="mb-2">
+                                    <span class="badge bg-primary" th:text="${action.categorie}">Catégorie</span>
+                                    <span class="badge" th:classappend="${action.archived ? 'bg-danger' : 'bg-success'}"
+                                          th:text="${action.archived ? 'Archivée' : 'Active'}">Statut</span>
+                                </div>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar" role="progressbar"
+                                         th:style="'width: ' + ${(action.sommeActuelle / action.objectifCollecte) * 100} + '%;'"
+                                         th:attr="aria-valuenow=${(action.sommeActuelle / action.objectifCollecte) * 100}"
+                                         aria-valuemin="0" aria-valuemax="100">
+                                        <span th:text="${#numbers.formatDecimal((action.sommeActuelle / action.objectifCollecte) * 100, 0, 'POINT', 1, 'COMMA')} + '%'">0%</span>
+                                    </div>
+                                </div>
+                                <p class="card-text">
+                                    <small class="text-muted">
+                                        <i class="bi bi-calendar"></i>
+                                        <span th:text="${#temporals.format(action.dateDebut, 'dd/MM/yyyy')}">Date début</span> -
+                                        <span th:text="${#temporals.format(action.dateFin, 'dd/MM/yyyy')}">Date fin</span>
+                                    </small>
+                                </p>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <div class="btn-group w-100">
+                                    <a th:href="@{/admin/actions/{id}/edit(id=${action.id})}" class="btn btn-outline-primary">
+                                        <i class="bi bi-pencil"></i> Modifier
+                                    </a>
+                                    <form th:action="@{/admin/actions/{id}/archive(id=${action.id})}" method="post" style="display: inline;">
+                                        <button type="submit" class="btn btn-outline-warning">
+                                            <i class="bi" th:classappend="${action.archived ? 'bi-arrow-counterclockwise' : 'bi-archive'}"></i>
+                                            <span th:text="${action.archived ? 'Désarchiver' : 'Archiver'}">Archiver</span>
+                                        </button>
+                                    </form>
+                                    <form th:action="@{/admin/actions/{id}/delete(id=${action.id})}" method="post" style="display: inline;">
+                                        <button type="submit" class="btn btn-outline-danger"
+                                                onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette action ?');">
+                                            <i class="bi bi-trash"></i> Supprimer
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Initialisation du graphique des dons
+    fetch('/admin/actions/statistics')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('donationsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'],
+                    datasets: [{
+                        label: 'Dons par mois',
+                        data: [data.totalDonations / 12],
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+</script>
+</body>
+</html>
