@@ -33,4 +33,12 @@ public class ParticipationService {
     public void deleteParticipation(int id) {
         participationRepository.deleteById(id);
     }
+
+    public List<Participation> getParticipationsByUser(int userId) {
+        return participationRepository.findByUtilisateurId(userId);
+    }
+
+    public boolean hasUserParticipated(int userId, int actionId) {
+        return participationRepository.existsByUtilisateurIdAndActionChariteId(userId, actionId);
+    }
 }

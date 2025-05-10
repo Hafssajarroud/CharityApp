@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Accueil - Mon Projet Solidaire</title>
+    <title th:text="#{app.name}">Accueil - Mon Projet Solidaire</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Bootstrap + Google Fonts + FontAwesome + AOS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
 
     <style>
         :root {
@@ -260,17 +262,27 @@
 <nav class="navbar navbar-expand-lg navbar-light sticky-top">
     <div class="container">
         <a class="navbar-brand fw-bold fs-3 text-primary-color" href="/">
-            <i class="fas fa-hands-helping me-2"></i>Solidarité
+            <i class="fas fa-hands-helping me-2"></i><span th:text="#{app.name}">Solidarité</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarContent">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item mx-2"><a class="nav-link" th:href="@{/organisation}">Organisations</a></li>
-                <li class="nav-item mx-2"><a class="nav-link" href="/actions">Nos Actions</a></li>
-                <li class="nav-item mx-2"><a class="nav-link" href="/dons/historique">Mes Dons</a></li>
-                <li class="nav-item mx-2"><a class="nav-link" href="/participations">S'Engager</a></li>
+                <li class="nav-item mx-2"><a class="nav-link" th:href="@{/organisation}" th:text="#{nav.organizations}">Organisations</a></li>
+                <li class="nav-item mx-2"><a class="nav-link" href="/actions" th:text="#{nav.actions}">Actions</a></li>
+                <li class="nav-item mx-2"><a class="nav-link" href="/dons/historique" th:text="#{nav.donations}">Mes Dons</a></li>
+                <li class="nav-item mx-2"><a class="nav-link" href="/participations/mes-participations" th:text="#{nav.participations}">Participation</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-globe"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="?lang=fr">Français</a></li>
+                        <li><a class="dropdown-item" href="?lang=en">English</a></li>
+                        <li><a class="dropdown-item" href="?lang=ar">العربية</a></li>
+                    </ul>
+                </li>
             </ul>
 
             <!-- Menu utilisateur connecté -->
@@ -296,26 +308,26 @@
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item" th:href="@{/profile}">
-                                <i class="fas fa-user me-2"></i>Mon profil
+                                <i class="fas fa-user me-2"></i><span th:text="#{nav.profile}">Mon profil</span>
                             </a>
                         </li>
                         <li>
                             <form th:action="@{/logout}" method="post" class="d-inline">
                                 <button type="submit" class="dropdown-item text-danger">
-                                    <i class="fas fa-sign-out-alt me-2"></i>Déconnexion
+                                    <i class="fas fa-sign-out-alt me-2"></i><span th:text="#{nav.logout}">Déconnexion</span>
                                 </button>
                             </form>
                         </li>
                     </ul>
                 </div>
-                <a href="/dons" class="btn btn-primary-color rounded-pill ms-3">Donner Maintenant</a>
+                <a href="/dons" class="btn btn-primary-color rounded-pill ms-3" th:text="#{nav.donate}">Donner Maintenant</a>
             </div>
 
             <!-- Formulaire de connexion -->
             <div class="d-flex align-items-center" th:unless="${#authorization.expression('isAuthenticated()')}">
                 <div class="dropdown">
                     <button class="btn btn-link nav-link dropdown-toggle" type="button" id="loginDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-user me-2"></i>Connexion
+                        <i class="fas fa-user me-2"></i><span th:text="#{nav.login}">Connexion</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end p-3" style="min-width: 300px;">
                         <form th:action="@{/auth/login}" method="post">
@@ -324,19 +336,19 @@
                                 <input type="email" class="form-control" id="email" name="username" required>
                             </div>
                             <div class="mb-3">
-                                <label for="password" class="form-label">Mot de passe</label>
+                                <label for="password" class="form-label" th:text="#{auth.password}">Mot de passe</label>
                                 <input type="password" class="form-control" id="password" name="password" required>
                             </div>
                             <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary">Se connecter</button>
+                                <button type="submit" class="btn btn-primary" th:text="#{nav.login}">Se connecter</button>
                             </div>
                             <div class="text-center mt-2">
-                                <a th:href="@{/auth/register}" class="btn btn-link">Créer un compte</a>
+                                <a th:href="@{/auth/register}" class="btn btn-link" th:text="#{nav.register}">Créer un compte</a>
                             </div>
                         </form>
                     </ul>
                 </div>
-                <a href="/dons" class="btn btn-primary-color rounded-pill ms-3">Donner Maintenant</a>
+                <a href="/dons" class="btn btn-primary-color rounded-pill ms-3" th:text="#{nav.donate}">Donner Maintenant</a>
             </div>
         </div>
     </div>
@@ -347,27 +359,27 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6 mb-5 mb-lg-0">
-                <h1 data-aos="fade-up">Chaque don compte pour changer des vies</h1>
-                <p data-aos="fade-up" data-aos-delay="100">
+                <h1 data-aos="fade-up" th:text="#{home.hero.title}">Chaque don compte pour changer des vies</h1>
+                <p data-aos="fade-up" data-aos-delay="100" th:text="#{home.hero.description}">
                     Rejoignez notre communauté solidaire et participez à des actions concrètes pour aider ceux qui en ont le plus besoin. Votre soutien fait la différence.
                 </p>
                 <div class="d-flex flex-wrap gap-3" data-aos="fade-up" data-aos-delay="200">
-                    <a href="/dons" class="btn btn-primary-color rounded-pill">Faire un Don</a>
-                    <a href="/participations" class="btn btn-outline-dark rounded-pill">Devenir Bénévole</a>
+                    <a href="/dons" class="btn btn-primary-color rounded-pill" th:text="#{nav.donate}">Faire un Don</a>
+                    <a href="/actions" class="btn btn-outline-dark rounded-pill" th:text="#{home.hero.volunteer}">Devenir Bénévole</a>
                 </div>
 
                 <div class="mt-4 d-flex flex-wrap gap-4" data-aos="fade-up" data-aos-delay="300">
                     <div>
                         <div class="stat-number">15K+</div>
-                        <div class="stat-label">Personnes aidées</div>
+                        <div class="stat-label" th:text="#{home.stats.people}">Personnes aidées</div>
                     </div>
                     <div>
                         <div class="stat-number">200+</div>
-                        <div class="stat-label">Projets réalisés</div>
+                        <div class="stat-label" th:text="#{home.stats.projects}">Projets réalisés</div>
                     </div>
                     <div>
                         <div class="stat-number">95%</div>
-                        <div class="stat-label">Dons reversés</div>
+                        <div class="stat-label" th:text="#{home.stats.donations}">Dons reversés</div>
                     </div>
                 </div>
             </div>
@@ -382,8 +394,8 @@
 <section class="py-5 my-5">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="section-title" data-aos="fade-up">Causes Urgentes</h2>
-            <p class="lead mx-auto" style="max-width: 700px;" data-aos="fade-up" data-aos-delay="100">
+            <h2 class="section-title" data-aos="fade-up" th:text="#{home.causes.title}">Causes Urgentes</h2>
+            <p class="lead mx-auto" style="max-width: 700px;" data-aos="fade-up" data-aos-delay="100" th:text="#{home.causes.description}">
                 Découvrez nos campagnes en cours et contribuez à celles qui vous touchent le plus.
             </p>
         </div>
@@ -451,7 +463,7 @@
         </div>
 
         <div class="text-center mt-5" data-aos="fade-up">
-            <a href="/actions" class="btn btn-outline-primary-color rounded-pill px-4">Voir toutes nos causes</a>
+            <a href="/actions" class="btn btn-outline-primary-color rounded-pill px-4">Voir toutes nos actions</a>
         </div>
     </div>
 </section>
@@ -504,7 +516,7 @@
                 </div>
                 <h5 class="fw-bold">2. Devenir bénévole</h5>
                 <p>Donnez de votre temps et compétences pour nos différentes missions.</p>
-                <a href="/participations" class="btn btn-sm btn-outline-primary-color">S'engager</a>
+                <a href="/participations/mes-participations" class="btn btn-sm btn-outline-primary-color">S'engager</a>
             </div>
             <div class="col-md-4" data-aos="zoom-in" data-aos-delay="300">
                 <div class="mb-3">

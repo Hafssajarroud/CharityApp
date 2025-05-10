@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Participations - CharityApp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+<div class="container mx-auto px-4 py-6">
+    <h1 class="text-3xl font-bold mb-6 text-center">Mes Participations</h1>
+
+    <!-- Lien vers la page d'accueil -->
+    <div class="mb-4">
+        <a th:href="@{/}" class="text-blue-600 hover:underline">
+            <i class="fas fa-arrow-left"></i> Retour à la page d'accueil
+        </a>
+    </div>
+
+    <!-- Liste des participations -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div th:each="participation : ${participations}" class="bg-white p-4 rounded-2xl shadow hover:shadow-lg transition">
+            <!-- Affichage de l'image de l'action -->
+            <div th:if="${participation.actionCharite != null and participation.actionCharite.logo != null and not #strings.isEmpty(participation.actionCharite.logo)}">
+                <img th:src="@{'/images/' + ${participation.actionCharite.logo}}"
+                     alt="Image de l'action"
+                     class="w-full h-56 object-cover rounded-lg"
+                     onerror="this.onerror=null; this.src='/images/default-action.jpg';">
+            </div>
+            <div th:if="${participation.actionCharite == null or participation.actionCharite.logo == null or #strings.isEmpty(participation.actionCharite.logo)}"
+                 class="bg-gray-200 h-56 rounded-lg flex items-center justify-center">
+                <img src="/images/default-action.jpg"
+                     alt="Image par défaut"
+                     class="w-full h-56 object-cover rounded-lg">
+            </div>
+
+            <h2 class="text-xl font-semibold mb-2 mt-4" th:text="${participation.actionCharite != null ? participation.actionCharite.titre : 'Action supprimée'}">Titre de l'action</h2>
+            <p class="text-sm text-blue-700 mb-2 font-medium"
+               th:if="${participation.actionCharite != null and participation.actionCharite.organisation != null}"
+               th:text="'Organisé par : ' + ${participation.actionCharite.organisation.nom}">Nom de l'organisation</p>
+
+            <p class="text-sm text-gray-600 mb-2" th:if="${participation.actionCharite != null}">
+                <i class="fas fa-map-marker-alt"></i> <span th:text="${participation.actionCharite.lieu}">Lieu</span>
+            </p>
+            <p class="text-sm mb-2" th:if="${participation.actionCharite != null}"
+               th:text="${#strings.abbreviate(participation.actionCharite.description, 100)}">Description...</p>
+
+            <!-- Date de participation -->
+            <p class="text-sm text-gray-500 mb-4">
+                <i class="fas fa-calendar-alt"></i>
+                Participation le <span th:text="${#temporals.format(participation.dateParticipation, 'dd/MM/yyyy')}">Date</span>
+            </p>
+
+            <!-- Boutons d'action -->
+            <div class="flex justify-between items-center" th:if="${participation.actionCharite != null}">
+                <form th:action="@{/participations/annuler/{id}(id=${participation.id})}" method="post" class="inline">
+                    <button type="submit"
+                            class="bg-red-600 text-white px-4 py-2 rounded hover:bg-yellow-700"
+                            onclick="return confirm('Êtes-vous sûr de vouloir annuler votre participation ?')">
+                        <i class="fas fa-times"></i> Annuler
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Message si aucune participation -->
+    <div th:if="${participations == null or participations.empty}" class="text-center py-8">
+        <i class="fas fa-hands-helping text-4xl text-gray-400 mb-4"></i>
+        <p class="text-xl text-gray-600">Vous n'avez pas encore participé à des actions</p>
+        <a th:href="@{/actions}" class="inline-block mt-4 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+            Découvrir les actions
+        </a>
+    </div>
+</div>
+
+</body>
+</html>
